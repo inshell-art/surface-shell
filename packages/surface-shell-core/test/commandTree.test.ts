@@ -39,6 +39,10 @@ describe("commandTree", () => {
     expect(findCommandNodeByPath(root, ["config", "direct", "model"])?.id).toBe("model");
   });
 
+  it("returns null for invalid paths", () => {
+    expect(findCommandNodeByPath(root, ["config", "missing"])).toBeNull();
+  });
+
   it("prefers canonical paths when aliases match", () => {
     const result = findLongestCommandMatch(root, "cfg direct");
     expect(result?.commandPath).toEqual(["config", "direct"]);
@@ -48,6 +52,12 @@ describe("commandTree", () => {
   it("resolves hidden legacy alias nodes to canonical paths", () => {
     const result = findLongestCommandMatch(root, "models");
     expect(result?.commandPath).toEqual(["config", "direct", "model"]);
+  });
+
+  it("prefers the longest valid path and preserves the remainder", () => {
+    const result = findLongestCommandMatch(root, "config direct model gpt-fixture");
+    expect(result?.commandPath).toEqual(["config", "direct", "model"]);
+    expect(result?.remainder).toBe("gpt-fixture");
   });
 
   it("hides hidden nodes from default children", () => {

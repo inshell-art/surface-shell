@@ -46,6 +46,7 @@ export type SurfaceShellConfig<TState = unknown> = {
   redactionRules?: SurfaceRedactionRule[];
   storage?: SurfaceStorageAdapter;
   getState: () => TState;
+  handleQuestion?: SurfaceQuestionHandler<TState>;
   getDynamicCompletions?: (ctx: SurfaceContext<TState>, input: string) => SurfaceCompletion[];
 };
 
@@ -81,6 +82,11 @@ export type SurfaceCommandHandler<TState = unknown> = (
 ) => SurfaceReturn | Promise<SurfaceReturn>;
 
 export type SurfaceHelpRenderer<TState = unknown> = (ctx: SurfaceContext<TState>) => SurfaceReturn;
+
+export type SurfaceQuestionHandler<TState = unknown> = (
+  ctx: SurfaceContext<TState>,
+  question: string
+) => SurfaceReturn | Promise<SurfaceReturn>;
 
 export type SurfaceReturnKind = "return" | "guidance" | "error" | "blocked" | "empty";
 
@@ -123,6 +129,7 @@ export type SurfaceSideEffectKind =
   | "network"
   | "external-model"
   | "wallet"
+  | "contract"
   | "contract-read"
   | "contract-write"
   | "write"

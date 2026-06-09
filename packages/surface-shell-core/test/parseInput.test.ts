@@ -11,10 +11,14 @@ const commandRoot: SurfaceCommandNode[] = [
         id: "direct",
         path: ["config", "direct"],
         title: "direct",
-        children: [{ id: "key", path: ["config", "direct", "key"], title: "key" }]
+        children: [
+          { id: "provider", path: ["config", "direct", "provider"], title: "provider" },
+          { id: "key", path: ["config", "direct", "key"], title: "key" }
+        ]
       }
     ]
   },
+  { id: "prompt", path: ["prompt"], title: "prompt" },
   { id: "help", path: ["help"], title: "help" }
 ];
 
@@ -24,19 +28,29 @@ describe("parseInput", () => {
   });
 
   it("parses command-first commands with raw remainder", () => {
-    const result = parseInput("config direct key sk-123", commandFirst());
+    const result = parseInput("  config direct provider openai  ", commandFirst());
     expect(result).toMatchObject({
       kind: "command",
-      commandPath: ["config", "direct", "key"],
-      remainder: "sk-123"
+      commandPath: ["config", "direct", "provider"],
+      remainder: "openai"
     });
   });
 
-  it("matches command heads case-insensitively by default", () => {
-    const result = parseInput("CONFIG direct", commandFirst());
+  it("matches command paths case-insensitively by default", () => {
+    const result = parseInput("CONFIG DIRECT PROVIDER openai", commandFirst());
     expect(result).toMatchObject({
       kind: "command",
-      commandPath: ["config", "direct"]
+      commandPath: ["config", "direct", "provider"],
+      remainder: "openai"
+    });
+  });
+
+  it("preserves raw handler remainder without shell-style quote parsing", () => {
+    const result = parseInput('prompt "the sky"', commandFirst());
+    expect(result).toMatchObject({
+      kind: "command",
+      commandPath: ["prompt"],
+      remainder: '"the sky"'
     });
   });
 

@@ -160,6 +160,17 @@ export function createSurfaceShell<TState>(config: SurfaceShellConfig<TState>): 
 
       try {
         if (parseResult.kind === "question") {
+          if (config.handleQuestion) {
+            return await finalize(
+              await config.handleQuestion(ctx, parseResult.question),
+              parseResult,
+              input,
+              normalized,
+              emittedEvents,
+              now
+            );
+          }
+
           return await finalize(
             {
               kind: "return",
@@ -210,6 +221,8 @@ export function createSurfaceShell<TState>(config: SurfaceShellConfig<TState>): 
 
         if (match.node.run) {
           result = await match.node.run(ctx, match.remainder);
+        } else if (match.remainder.length > 0) {
+          result = unknownRemainderReturn(parseResult, match.remainder, config.commandPrefix);
         } else if (match.node.renderHelp) {
           result = match.node.renderHelp(ctx);
         } else if (match.node.children && match.node.children.length > 0) {
@@ -290,6 +303,21 @@ function unknownCommandReturn(
 
 function prefixedCommand(command: string, prefix: string | null): string {
   return prefix ? `${prefix}${command}` : command;
+}
+
+function unknownRemainderReturn(
+  parseResult: Extract<SurfaceParseResult, { kind: "command" }>,
+  remainder: string,
+  prefix: string | null
+): SurfaceReturn {
+  const commandHead = `${parseResult.prefix ?? ""}${parseResult.commandPath.join(" ")}`;
+  const command = `${commandHead} ${remainder}`.trim();
+  return {
+    kind: "guidance",
+    title: "unknown command",
+    body: `unknown command: ${command}`,
+    next: [{ command: prefixedCommand("help", prefix), label: "show commands" }]
+  };
 }
 
 function storageKey(shellId: string, collection: "history" | "transcript"): string {

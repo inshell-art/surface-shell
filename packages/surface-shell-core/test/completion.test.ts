@@ -56,6 +56,30 @@ describe("completion", () => {
     });
 
     expect(shell.getCompletions("/").map((completion) => completion.value)).toEqual(["/config", "/corpus"]);
+    expect(shell.getCompletions("/co").map((completion) => completion.value)).toEqual(["/config", "/corpus"]);
+  });
+
+  it("adds state-driven next-action completions from the app callback", () => {
+    const shell = createSurfaceShell({
+      shellId: "waiting",
+      displayName: "Waiting",
+      mode: "command-first",
+      commandPrefix: null,
+      historyLimit: 10,
+      transcriptLimit: 10,
+      getState: () => ({ waiting: true }),
+      getPrompt: () => ">",
+      getDynamicCompletions: () => [
+        { value: "return", kind: "next-action", label: "return response" },
+        { value: "cancel", kind: "next-action", label: "cancel response" }
+      ],
+      root
+    });
+
+    expect(shell.getCompletions("").filter((completion) => completion.kind === "next-action")).toEqual([
+      { value: "return", kind: "next-action", label: "return response" },
+      { value: "cancel", kind: "next-action", label: "cancel response" }
+    ]);
   });
 });
 

@@ -66,6 +66,26 @@ describe("dispatcher", () => {
 
     release();
     await expect(first).resolves.toMatchObject({ kind: "return", body: "done" });
+    await expect(shell.dispatch("slow")).resolves.toMatchObject({ kind: "return", body: "done" });
+  });
+
+  it("captures handler errors into error returns", async () => {
+    const shell = createShell([
+      {
+        id: "fail",
+        path: ["fail"],
+        title: "fail",
+        run: () => {
+          throw new Error("fixture failure");
+        }
+      }
+    ]);
+
+    await expect(shell.dispatch("fail")).resolves.toMatchObject({
+      kind: "error",
+      title: "command failed",
+      errors: ["fixture failure"]
+    });
   });
 
   it("records command events in order", async () => {
@@ -96,6 +116,32 @@ describe("dispatcher", () => {
       title: "question",
       body: "What is PATH?"
     });
+  });
+
+  it("routes question-first plain input to an app-provided question handler", async () => {
+    const questions: string[] = [];
+    const shell = createSurfaceShell({
+      shellId: "ask",
+      displayName: "Ask",
+      mode: "question-first",
+      commandPrefix: "/",
+      historyLimit: 10,
+      transcriptLimit: 10,
+      getState: () => ({}),
+      getPrompt: () => "> ",
+      handleQuestion: (_ctx, question) => {
+        questions.push(question);
+        return { kind: "return", title: "handled", body: question };
+      },
+      root: [{ id: "help", path: ["help"], title: "help" }]
+    });
+
+    await expect(shell.dispatch("What is PATH?")).resolves.toMatchObject({
+      kind: "return",
+      title: "handled",
+      body: "What is PATH?"
+    });
+    expect(questions).toEqual(["What is PATH?"]);
   });
 });
 

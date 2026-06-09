@@ -6,6 +6,8 @@ Surface Shell is not a terminal emulator and not an agent framework. It is a sma
 
 The shell returns the map.
 
+Expanded: Surface Shell is an interface pattern where compact commands reveal the local command tree, current state, missing requirements, and next safe actions. Natural language may help express intent, but explicit commands commit side effects.
+
 ## Why It Exists
 
 AI-age tools often carry hidden state: model route, provider, prompt, runtime, current output, evidence, provenance, wallet, authorization, and live resource state. A Surface Shell lets an app expose that state through compact commands without moving app-specific business logic into the shell core.
@@ -116,3 +118,13 @@ Surface Shell core does not provide React components, terminal emulation, PTY su
 ## Validation Apps
 
 THOUGHT CLI validates command-first, side-effectful workflows. Ask Inshell validates question-first, source-grounded workflows. The examples in `examples/` show both shapes without importing either app.
+
+## Validation Ladder
+
+1. Standalone core tests
+2. Fixture shells
+3. THOUGHT CLI integration
+4. Ask Inshell integration
+5. Golden transcript tests across both apps
+
+The standalone fixture tests prove the generic mechanics before app adoption. Final validation still comes from THOUGHT CLI and Ask Inshell importing the package without losing product behavior.

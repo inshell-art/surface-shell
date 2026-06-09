@@ -8,7 +8,7 @@ import {
 
 const thoughtRule: SurfaceRedactionRule = {
   id: "thought-direct-key",
-  pattern: /^(key|config key|config direct key)\s+\S+/i,
+  pattern: /^(key|config key|config direct key)\s+(?!clear\b)\S+/i,
   replacement: "$1 <redacted>",
   suppressHistory: true
 };
@@ -52,6 +52,50 @@ describe("redaction", () => {
 
     await shell.dispatch("config direct key sk-test");
     expect(shell.getHistory()).toEqual([]);
+  });
+
+  it("does not treat clear variants as secrets", async () => {
+    const shell = createSurfaceShell({
+      shellId: "thought",
+      displayName: "THOUGHT",
+      mode: "command-first",
+      commandPrefix: null,
+      historyLimit: 10,
+      transcriptLimit: 10,
+      redactionRules: [thoughtRule],
+      getState: () => ({}),
+      getPrompt: () => "thought> ",
+      root: keyRoot()
+    });
+
+    await shell.dispatch("config direct key clear");
+    expect(shell.getHistory().map((entry) => entry.input)).toEqual(["config direct key clear"]);
+  });
+
+  it("redacts output fragments when rules target output text", async () => {
+    const shell = createSurfaceShell({
+      shellId: "thought",
+      displayName: "THOUGHT",
+      mode: "command-first",
+      commandPrefix: null,
+      historyLimit: 10,
+      transcriptLimit: 10,
+      redactionRules: [{ id: "secret-fragment", pattern: /sk-test-\d+/g, replacement: "<redacted>" }],
+      getState: () => ({}),
+      getPrompt: () => "thought> ",
+      root: [
+        {
+          id: "leak",
+          path: ["leak"],
+          title: "leak",
+          run: () => ({ kind: "return", body: "raw sk-test-123" })
+        }
+      ]
+    });
+
+    const result = await shell.dispatch("leak");
+    expect(result.body).toBe("raw <redacted>");
+    expect(shell.getTranscript()[0]?.output).toContain("raw <redacted>");
   });
 
   it("masks ask key commands and can suppress transcript", async () => {
