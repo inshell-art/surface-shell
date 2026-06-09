@@ -1,0 +1,19 @@
+{
+  "name": "surface-shell",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @inshell/surface-shell-core",
+    "test": "npm run test -w @inshell/surface-shell-core",
+    "typecheck": "npm run typecheck -w @inshell/surface-shell-core"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
