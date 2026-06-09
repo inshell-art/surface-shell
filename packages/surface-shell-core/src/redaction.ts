@@ -49,6 +49,8 @@ export function applyRedaction(
   };
 }
 
+export const applyRedactionRules = applyRedaction;
+
 export function redactSurfaceReturn(
   result: SurfaceReturn,
   rules: SurfaceRedactionRule[] = [],

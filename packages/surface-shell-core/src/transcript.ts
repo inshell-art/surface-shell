@@ -12,6 +12,8 @@ export function addTranscriptEntry(
   return capTranscript([...transcript, entry], limit);
 }
 
+export const appendTranscriptEntry = addTranscriptEntry;
+
 export function capTranscript(transcript: SurfaceTranscriptEntry[], limit: number): SurfaceTranscriptEntry[] {
   return transcript.slice(Math.max(0, transcript.length - Math.max(0, limit)));
 }

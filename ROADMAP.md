@@ -1,32 +1,27 @@
 # Roadmap
 
-## Phase A: Standalone Repo
+## 0.1.x
 
-- npm workspace scaffold
-- private `@inshell/surface-shell-core` package
-- practical docs
-- command-first and question-first examples
+Core mechanics and standalone tests.
 
-## Phase B: Core v0.1
+## 0.2.x
 
-- normalization and parser
-- command tree and alias lookup
-- dispatcher with branch help
-- in-flight lock
-- redaction
-- history and transcript utilities
-- completions
-- side-effect metadata
-- plain-text renderer
+THOUGHT CLI adoption notes and command-first hardening.
 
-## Phase C: THOUGHT Adoption
+## 0.3.x
 
-Use the core dispatcher and branch-help helpers without moving THOUGHT-specific model, wallet, PATH, authorization, mint, provenance, or work-record logic into core.
+Ask Inshell adoption notes and question-first hardening.
 
-## Phase D: Ask Adoption
+## 0.4.x
 
-Use question-first parsing and slash-command branch surfaces while keeping corpus retrieval, evidence packs, model planning, live resources, and source trace in Ask.
+Conformance suite and golden transcript format.
 
-## Phase E: API Stabilization
+## 0.5.x
 
-Freeze a smaller API after both validation apps expose real integration pressure.
+Manifesto and principles stabilized.
+
+## 1.0.0
+
+Only after THOUGHT CLI and Ask Inshell use the core without app-specific hacks.
+
+Do not rush `1.0.0`.

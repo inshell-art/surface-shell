@@ -12,6 +12,8 @@ export function addHistoryEntry(
   return capHistory([...history, entry], limit);
 }
 
+export const appendHistoryEntry = addHistoryEntry;
+
 export function capHistory(history: SurfaceHistoryEntry[], limit: number): SurfaceHistoryEntry[] {
   return history.slice(Math.max(0, history.length - Math.max(0, limit)));
 }

@@ -1,17 +1,25 @@
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { createAskLikeFixture, createThoughtLikeFixture } from "./fixtures/shellFixtures.js";
+
+const testDir = dirname(fileURLToPath(import.meta.url));
 
 describe("golden transcript qualities", () => {
   it("keeps the command-first local map stable", async () => {
     const { shell } = createThoughtLikeFixture();
+    const golden = readGolden("command-first-basic.md");
 
     const config = shell.renderReturn(await shell.dispatch("config"));
     expect(config).toContain("config");
     expect(config).toContain("choose\n  config local\n  config connect\n  config direct\n  config my-brain");
+    expect(golden).toContain(config);
 
     const direct = shell.renderReturn(await shell.dispatch("config direct"));
     expect(direct).toContain("provider  none");
     expect(direct).toContain("config direct key <api-key>");
+    expect(golden).toContain(direct);
 
     const runBeforePrompt = await shell.dispatch("run");
     expect(runBeforePrompt.next).toContainEqual({ command: "prompt <text>" });
@@ -36,11 +44,13 @@ describe("golden transcript qualities", () => {
 
   it("keeps the question-first local map stable", async () => {
     const { shell, state } = createAskLikeFixture();
+    const golden = readGolden("question-first-basic.md");
 
     const config = shell.renderReturn(await shell.dispatch("/config"));
     expect(config).toContain("Ask works now with Corpus Search.");
     expect(config).toContain("/config browser");
     expect(config).toContain("/config api");
+    expect(golden).toContain("Ask works now with Corpus Search.");
 
     const question = await shell.dispatch("what is PATH?");
     expect(question.body).toBe("handled: what is PATH?");
@@ -49,6 +59,7 @@ describe("golden transcript qualities", () => {
     const corpus = shell.renderReturn(await shell.dispatch("/corpus"));
     expect(corpus).toContain("corpus   vfixture");
     expect(corpus).toContain("/corpus sources");
+    expect(golden).toContain("corpus   vfixture");
 
     const sources = await shell.dispatch("/sources");
     expect(sources).toMatchObject({ kind: "return", title: "sources", body: "2" });
@@ -65,3 +76,7 @@ describe("golden transcript qualities", () => {
     expect(clear.state).toContainEqual({ label: "using", value: "Corpus Search" });
   });
 });
+
+function readGolden(file: string): string {
+  return readFileSync(join(testDir, "fixtures", "golden", file), "utf8");
+}

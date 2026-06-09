@@ -22,3 +22,18 @@ export class SurfaceInFlightLock {
 export function createInFlightLock(): SurfaceInFlightLock {
   return new SurfaceInFlightLock();
 }
+
+export async function withInFlightLock<T>(
+  lock: SurfaceInFlightLock,
+  work: () => T | Promise<T>
+): Promise<T | null> {
+  if (!lock.tryAcquire()) {
+    return null;
+  }
+
+  try {
+    return await work();
+  } finally {
+    lock.release();
+  }
+}

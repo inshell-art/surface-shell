@@ -288,6 +288,13 @@ export function createSurfaceShell<TState>(config: SurfaceShellConfig<TState>): 
   };
 }
 
+export async function dispatchSurfaceInput<TState>(
+  shell: SurfaceShell<TState>,
+  input: string
+): Promise<SurfaceReturn> {
+  return shell.dispatch(input);
+}
+
 function unknownCommandReturn(
   parseResult: Extract<SurfaceParseResult, { kind: "command" | "unknown" }>,
   prefix: string | null

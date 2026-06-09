@@ -2,76 +2,58 @@
 
 A progressive, state-aware command surface for AI-age tools.
 
-Surface Shell is not a terminal emulator and not an agent framework. It is a small TypeScript core for building command/question interfaces where compact commands reveal the local command tree, current state, missing requirements, next actions, and side-effect gates.
+> The shell returns the map.
 
-The shell returns the map.
+GUI shows controls but can hide procedure. CLI exposes procedure but often hides the map. AI chat accepts intent but can blur authority. Surface Shell keeps command precision while returning the local command tree, current state, missing requirements, and next safe actions.
 
-Expanded: Surface Shell is an interface pattern where compact commands reveal the local command tree, current state, missing requirements, and next safe actions. Natural language may help express intent, but explicit commands commit side effects.
+Surface Shell Core provides shell mechanics. Applications provide domain logic.
 
-## Why It Exists
-
-AI-age tools often carry hidden state: model route, provider, prompt, runtime, current output, evidence, provenance, wallet, authorization, and live resource state. A Surface Shell lets an app expose that state through compact commands without moving app-specific business logic into the shell core.
-
-The core package provides generic mechanics only:
-
-- input normalization
-- command-first and question-first parsing
-- command tree and alias lookup
-- branch help helpers
-- raw-remainder dispatch
-- in-flight locking
-- redaction rules
-- history and transcript utilities
-- command-tree completions
-- side-effect metadata
-- structured returns and plain-text rendering
-
-## Install, Build, Test
+## Install
 
 ```sh
-npm install
-npm test
-npm run build
-npm run typecheck
+npm install @inshell/surface-shell-core
 ```
 
-The package is private until both validation apps adopt it:
-
-```ts
-import { createSurfaceShell } from "@inshell/surface-shell-core";
-```
+The package is currently private while the API is validated by reference adopters.
 
 ## Minimal Command-First Example
 
 ```ts
 import { createSurfaceShell, renderBranchHelp, type SurfaceCommandNode } from "@inshell/surface-shell-core";
 
-type State = { provider: string | null };
+type State = { route: string | null; model: string | null };
 
 const configNode: SurfaceCommandNode<State> = {
   id: "config",
   path: ["config"],
   title: "config",
-  children: [{ id: "direct", path: ["config", "direct"], title: "direct" }]
+  children: [
+    { id: "config-local", path: ["config", "local"], title: "local" },
+    { id: "config-direct", path: ["config", "direct"], title: "direct" }
+  ]
 };
 
 configNode.renderHelp = (ctx) =>
   renderBranchHelp(configNode, ctx, {
-    state: [{ label: "provider", value: ctx.state.provider ?? "not set", status: "ok" }],
-    next: [{ command: "config direct" }]
+    state: [
+      { label: "route", value: ctx.state.route ?? "none" },
+      { label: "model", value: ctx.state.model ?? "none" }
+    ]
   });
 
 const shell = createSurfaceShell<State>({
-  shellId: "thought",
-  displayName: "THOUGHT",
+  shellId: "example.command",
+  displayName: "Command Example",
   mode: "command-first",
   commandPrefix: null,
   historyLimit: 100,
   transcriptLimit: 100,
-  getState: () => ({ provider: "openai" }),
-  getPrompt: () => "thought> ",
+  getState: () => ({ route: null, model: null }),
+  getPrompt: () => "example> ",
   root: [configNode]
 });
+
+await shell.dispatch("config");
 ```
 
 ## Minimal Question-First Example
@@ -80,51 +62,44 @@ const shell = createSurfaceShell<State>({
 import { createSurfaceShell } from "@inshell/surface-shell-core";
 
 const shell = createSurfaceShell({
-  shellId: "ask",
-  displayName: "Ask",
+  shellId: "example.question",
+  displayName: "Question Example",
   mode: "question-first",
   commandPrefix: "/",
-  historyLimit: 50,
-  transcriptLimit: 50,
-  getState: () => ({ runtime: "corpus" }),
+  historyLimit: 100,
+  transcriptLimit: 100,
+  getState: () => ({ using: "Corpus Search" }),
   getPrompt: () => "> ",
+  handleQuestion: (_ctx, question) => ({ kind: "return", title: "question", body: question }),
   root: [
     { id: "config", path: ["config"], title: "config" },
     { id: "corpus", path: ["corpus"], title: "corpus" }
   ]
 });
 
-await shell.dispatch("What is PATH?");
+await shell.dispatch("what is PATH?");
 await shell.dispatch("/config");
 ```
 
-## Core Principles
+## Core Concepts
 
-1. The shell returns the map.
-2. State before syntax.
-3. Branch commands are panels.
-4. Every failure gives next actions.
-5. Canonical commands are taught; aliases are tolerated.
-6. Secrets are never history.
-7. Natural language may suggest; commands commit.
-8. Side effects require explicit gates.
-9. Apps own ontology; core owns shell mechanics.
-10. Trace is part of the interface.
+- command tree
+- branch node
+- state-aware help
+- next actions
+- side-effect gates
+- redaction
+- transcript and command history
 
-## Non-Goals
+## Reference Adopters
 
-Surface Shell core does not provide React components, terminal emulation, PTY support, shell quoting, process execution, model clients, wallet logic, contract calls, corpus retrieval, evidence packs, or app-specific command semantics.
+- THOUGHT CLI: command-first, side-effectful shell
+- Ask Inshell: question-first, source-grounded shell
 
-## Validation Apps
+## Docs
 
-THOUGHT CLI validates command-first, side-effectful workflows. Ask Inshell validates question-first, source-grounded workflows. The examples in `examples/` show both shapes without importing either app.
-
-## Validation Ladder
-
-1. Standalone core tests
-2. Fixture shells
-3. THOUGHT CLI integration
-4. Ask Inshell integration
-5. Golden transcript tests across both apps
-
-The standalone fixture tests prove the generic mechanics before app adoption. Final validation still comes from THOUGHT CLI and Ask Inshell importing the package without losing product behavior.
+- [SPEC.md](SPEC.md)
+- [PRINCIPLES.md](PRINCIPLES.md)
+- [API.md](API.md)
+- [ADOPTION.md](ADOPTION.md)
+- [docs/conformance.md](docs/conformance.md)

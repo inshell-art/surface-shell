@@ -10,6 +10,18 @@ export type CommandToken = {
   end: number;
 };
 
+export function createCommandNode<TState>(node: SurfaceCommandNode<TState>): SurfaceCommandNode<TState> {
+  return node;
+}
+
+export function createCommandTree<TState>(nodes: SurfaceCommandNode<TState>[]): SurfaceCommandNode<TState>[] {
+  return normalizeCommandTree(nodes);
+}
+
+export function normalizeCommandTree<TState>(nodes: SurfaceCommandNode<TState>[]): SurfaceCommandNode<TState>[] {
+  return nodes;
+}
+
 export function tokenizeCommandText(commandText: string): CommandToken[] {
   const tokens: CommandToken[] = [];
   const matcher = /\S+/g;
@@ -85,6 +97,14 @@ export function findCommandNodeByPath<TState>(
   }
 
   return node;
+}
+
+export function resolveCommandNode<TState>(
+  root: SurfaceCommandNode<TState>[],
+  commandText: string,
+  options: CommandTreeLookupOptions = {}
+): SurfaceCommandMatch<TState> | null {
+  return findLongestCommandMatch(root, commandText, options);
 }
 
 export function findLongestCommandMatch<TState>(

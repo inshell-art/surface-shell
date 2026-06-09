@@ -36,3 +36,5 @@ export function renderText(result: SurfaceReturn): string {
 
   return blocks.join("\n\n");
 }
+
+export const renderSurfaceReturnText = renderText;
