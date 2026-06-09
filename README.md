@@ -117,8 +117,8 @@ await shell.dispatch("/config");
 
 ## Reference Adopters
 
-- THOUGHT CLI: command-first, side-effectful shell
-- Ask Inshell: question-first, source-grounded shell
+- [THOUGHT CLI](https://github.com/inshell-art/THOUGHT): command-first, side-effectful shell
+- [Ask Inshell](https://github.com/inshell-art/inshell-ask): question-first, source-grounded shell
 
 ## Docs
 
@@ -134,5 +134,5 @@ await shell.dispatch("/config");
 
 This package is private/unstable while the API is validated by reference adopters:
 
-- THOUGHT CLI: command-first, side-effectful shell
-- Ask Inshell: question-first, source-grounded shell
+- [THOUGHT CLI](https://github.com/inshell-art/THOUGHT): command-first, side-effectful shell
+- [Ask Inshell](https://github.com/inshell-art/inshell-ask): question-first, source-grounded shell
