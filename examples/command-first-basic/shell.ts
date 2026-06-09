@@ -36,13 +36,29 @@ const configNode: SurfaceCommandNode<ExampleState> = createCommandNode({
       id: "config-direct",
       path: ["config", "direct"],
       title: "direct",
-      run: () => {
-        state.route = "direct";
-        return { kind: "return", body: "route set to direct" };
-      }
+      children: [
+        { id: "config-direct-provider", path: ["config", "direct", "provider"], title: "provider" },
+        { id: "config-direct-model", path: ["config", "direct", "model"], title: "model" }
+      ]
     }
   ]
 });
+
+const directNode = configNode.children?.find((node) => node.id === "config-direct");
+
+if (directNode) {
+  directNode.renderHelp = (ctx) =>
+    renderBranchHelp(directNode, ctx, {
+      state: [
+        { label: "route", value: ctx.state.route ?? "none" },
+        { label: "model", value: ctx.state.model ?? "none" }
+      ],
+      next: [
+        { command: "config direct provider <id>" },
+        { command: "config direct model <id>" }
+      ]
+    });
+}
 
 configNode.renderHelp = (ctx) =>
   renderBranchHelp(configNode, ctx, {

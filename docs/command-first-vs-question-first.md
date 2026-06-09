@@ -25,3 +25,5 @@ Ordinary input is a question. Commands use a prefix, usually `/`.
 ```
 
 Use question-first mode for inquiry surfaces where natural language is the primary input and commands expose configuration, corpus, trace, and runtime state.
+
+Corpus Search can be base state in a question-first shell; it does not have to be modeled as a runtime.

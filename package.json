@@ -1,5 +1,6 @@
 {
   "name": "surface-shell",
+  "description": "Progressive, state-aware command surfaces for AI-era tools.",
   "version": "0.1.0",
   "private": true,
   "type": "module",

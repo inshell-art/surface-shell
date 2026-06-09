@@ -1,21 +1,23 @@
 # Surface Shell Principles
 
-Surface Shell is a progressive, state-aware command surface for AI-age tools.
+Surface Shell is a progressive, state-aware command surface for AI-era tools.
 
 The shell returns the map.
 
 1. The shell returns the map.
 2. Every branch command should be useful by itself.
 3. State appears before syntax.
-4. Missing requirements should include next actions.
+4. Missing requirements include next actions.
 5. Short commands open subtrees.
 6. Long one-shot commands are optional, not the teaching path.
 7. Unknown commands return guidance, not dead ends.
 8. Dangerous side effects require explicit commands.
-9. Secrets are redacted before transcript/history persistence.
-10. Natural language may suggest; explicit commands commit.
-11. Command-first and question-first are both valid shell modes.
-12. Core mechanics must remain app-agnostic.
+9. Side-effect gates are metadata, not permission.
+10. Secrets are redacted before transcript/history persistence.
+11. Natural language may suggest; explicit commands commit.
+12. Command-first and question-first are both valid modes.
+13. Humans read the map; agents inspect the structure.
+14. Core mechanics remain app-agnostic.
 
 ## Examples
 
@@ -37,7 +39,7 @@ next
 Bad:
 
 ```text
-use: config direct provider <id>
+use: config direct provider <id> key <api-key> model <id>
 ```
 
 Good:
@@ -46,9 +48,9 @@ Good:
 direct
 
 state
-  provider  none
-  key       none
-  model     none
+  provider   none
+  key        none
+  model      none
 
 next
   config direct provider <id>

@@ -18,6 +18,8 @@ Trace and provenance remain first-class.
 
 The shell returns the map.
 
+Surface Shell is an interface paradigm. The TypeScript package in this repo is a reference implementation.
+
 ## Compact Commands
 
 Compact commands are entry points, not hidden magic. `config` should be useful by itself because it returns the local map.

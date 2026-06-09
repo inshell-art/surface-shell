@@ -25,3 +25,14 @@ choose
   /config browser
   /config api
 ```
+
+```text
+> /unknown
+
+unknown command
+
+unknown command: /unknown
+
+next
+  /help  show commands
+```

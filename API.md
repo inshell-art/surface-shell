@@ -2,6 +2,8 @@
 
 This document names the public exports from `@inshell/surface-shell-core`. Some exports have compatibility aliases so adopters can use plain conceptual names while the implementation keeps its current module names.
 
+Structured objects are the API. Plain text is a renderer.
+
 ## createSurfaceShell
 
 Purpose: create a shell instance from a config.

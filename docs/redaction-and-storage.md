@@ -20,3 +20,5 @@ Rules are app-configured regular expressions. They can:
 ```
 
 The core exposes pure helpers and storage adapters. Apps own browser or server persistence decisions.
+
+Secrets are redacted before transcript/history persistence.

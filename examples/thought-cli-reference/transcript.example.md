@@ -44,6 +44,9 @@ state
 
 next
   run
+
+warnings
+  confirm: side-effect gate metadata is visible before commit
 ```
 
 ```text

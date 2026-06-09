@@ -1,5 +1,6 @@
 {
   "name": "@inshell/surface-shell-core",
+  "description": "Core primitives for progressive, state-aware command surfaces.",
   "version": "0.1.0",
   "private": true,
   "type": "module",

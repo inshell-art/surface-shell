@@ -1,12 +1,21 @@
 # Surface Shell
 
-A progressive, state-aware command surface for AI-age tools.
+Surface Shell is a progressive, state-aware command surface for AI-era tools.
 
 > The shell returns the map.
 
 GUI shows controls but can hide procedure. CLI exposes procedure but often hides the map. AI chat accepts intent but can blur authority. Surface Shell keeps command precision while returning the local command tree, current state, missing requirements, and next safe actions.
 
 Surface Shell Core provides shell mechanics. Applications provide domain logic.
+
+Surface Shell is human-primary and agent-legible: humans read the rendered map; agents can inspect the same command tree, state, next actions, side-effect gates, and trace events as structured data.
+
+## Position
+
+- Surface Shell is a paradigm.
+- Surface Shell Spec is the guideline / implementation contract.
+- `@inshell/surface-shell-core` is the TypeScript reference implementation.
+- Surface Shell Protocol is a possible future interop layer, not a current claim.
 
 ## Install
 
@@ -15,6 +24,31 @@ npm install @inshell/surface-shell-core
 ```
 
 The package is currently private while the API is validated by reference adopters.
+
+## What The Core Provides
+
+- input normalization
+- command tree resolution
+- branch-node help
+- state-aware returns
+- next actions
+- side-effect gate metadata
+- redaction
+- transcript/history helpers
+- in-flight lock
+- completion helpers
+- plain-text rendering
+
+## What The Core Does Not Provide
+
+- React UI
+- terminal emulator
+- POSIX shell parser
+- agent planner
+- model provider client
+- wallet or contract logic
+- RPC / filesystem effects
+- app-specific command semantics
 
 ## Minimal Command-First Example
 
@@ -81,16 +115,6 @@ await shell.dispatch("what is PATH?");
 await shell.dispatch("/config");
 ```
 
-## Core Concepts
-
-- command tree
-- branch node
-- state-aware help
-- next actions
-- side-effect gates
-- redaction
-- transcript and command history
-
 ## Reference Adopters
 
 - THOUGHT CLI: command-first, side-effectful shell
@@ -102,4 +126,13 @@ await shell.dispatch("/config");
 - [PRINCIPLES.md](PRINCIPLES.md)
 - [API.md](API.md)
 - [ADOPTION.md](ADOPTION.md)
+- [docs/agent-legibility.md](docs/agent-legibility.md)
+- [docs/protocol-future.md](docs/protocol-future.md)
 - [docs/conformance.md](docs/conformance.md)
+
+## Status
+
+This package is private/unstable while the API is validated by reference adopters:
+
+- THOUGHT CLI: command-first, side-effectful shell
+- Ask Inshell: question-first, source-grounded shell

@@ -1,27 +1,31 @@
 # Roadmap
 
-## 0.1.x
+## 0.1
 
-Core mechanics and standalone tests.
+Initial core mechanics.
 
-## 0.2.x
+## 0.2
 
-THOUGHT CLI adoption notes and command-first hardening.
+Reference adopters: THOUGHT CLI and Ask Inshell.
 
-## 0.3.x
+## 0.3
 
-Ask Inshell adoption notes and question-first hardening.
+Agent-legibility docs and conformance fixtures.
 
-## 0.4.x
+## 0.4
 
-Conformance suite and golden transcript format.
+Stable structured return and command tree schemas.
 
-## 0.5.x
+## 0.5
 
-Manifesto and principles stabilized.
+Optional JSON schema export.
 
-## 1.0.0
+## 1.0
 
-Only after THOUGHT CLI and Ask Inshell use the core without app-specific hacks.
+API stable after two reference adopters run without app-specific hacks.
+
+## Future
+
+Protocol only if multiple independent runtimes need interop.
 
 Do not rush `1.0.0`.
